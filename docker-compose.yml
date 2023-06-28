@@ -1,9 +1,26 @@
 version: "3.9"
 services:
+  db:
+    image: mysql:8.0.33
+    volumes:
+      - db-store:/var/lib/mysql
+    env_file:
+      - ./db.env
+    ports:
+      - 3306:3306
+
   backend:
     build: ./backend
     ports:
       - 8000:8000
     tty: true
+    env_file:
+      - ./db.env
+    command: /bin/bash -c "python manage.py makemigrations api && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app
+    depends_on:
+      - db
+
+volumes:
+  db-store:
