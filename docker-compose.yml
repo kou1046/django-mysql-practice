@@ -8,7 +8,14 @@ services:
       - ./db.env
     ports:
       - 3306:3306
-
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    ports:
+      - 8080:80
+    volumes:
+      - sessions:/sessions
+    env_file:
+      - ./phpadmin.env
   backend:
     build: ./backend
     ports:
@@ -24,3 +31,4 @@ services:
 
 volumes:
   db-store:
+  sessions:
